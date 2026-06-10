@@ -17,19 +17,28 @@ app.post('/generate', async (req, res) => {
     const { prompt } = req.body;
     if (!prompt) return res.status(400).json({ error: 'No prompt provided' });
 
-    const response = await fetch('https://text.pollinations.ai/openai', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
+      },
       body: JSON.stringify({
-        model: 'openai',
+        model: 'llama3-8b-8192',
         messages: [
           { role: 'system', content: 'You are an expert teaching assistant helping teachers create lesson plans, quizzes, and differentiated content. Be practical, clear and ready-to-use.' },
           { role: 'user', content: prompt }
-        ]
+        ],
+        max_tokens: 1500,
+        temperature: 0.7
       })
     });
 
-    if (!response.ok) throw new Error(`Upstream error: ${response.status}`);
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(`Groq error: ${response.status} - ${err}`);
+    }
+
     const data = await response.json();
     res.json({ result: data.choices[0].message.content });
 
