@@ -44,4 +44,11 @@ app.post('/generate', async (req, res) => {
 
   } catch (err) {
     console.error('Error:', err.message);
-    res.status(500).json({ error: err.message
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/', (req, res) => res.send('Eelm AI Server is running! ✅'));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
