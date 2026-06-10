@@ -24,7 +24,7 @@ app.post('/generate', async (req, res) => {
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'llama3-8b-8192',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: 'You are an expert teaching assistant helping teachers create lesson plans, quizzes, and differentiated content. Be practical, clear and ready-to-use.' },
           { role: 'user', content: prompt }
@@ -44,11 +44,4 @@ app.post('/generate', async (req, res) => {
 
   } catch (err) {
     console.error('Error:', err.message);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get('/', (req, res) => res.send('Eelm AI Server is running! ✅'));
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    res.status(500).json({ error: err.message
